@@ -88,7 +88,7 @@ def train_model(sample_data, preprocessor):
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
         ]
     )
 
@@ -150,14 +150,14 @@ def test_model_reproducibility(sample_data, preprocessor):
     model1 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
         ]
     )
 
     model2 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
         ]
     )
 
