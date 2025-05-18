@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 import pickle
@@ -164,7 +165,8 @@ class ModelTester:
         model = Pipeline(
             steps=[
                 ("preprocessor", preprocessor),
-                ("classifier", RandomForestClassifier(**model_params)),
+                #("classifier", RandomForestClassifier(**model_params)),
+                ("classifier", DecisionTreeClassifier(**model_params)),
             ]
         )
 
@@ -270,7 +272,9 @@ if __name__ == "__main__":
     )
 
     # パラメータ設定
-    model_params = {"n_estimators": 100, "random_state": 42}
+    #model_params = {"n_estimators": 100, "random_state": 42}
+    model_params = {"random_state": 42, "max_depth": 10, "max_leaf_nodes" : 3}
+
 
     # モデルトレーニング
     model = ModelTester.train_model(X_train, y_train, model_params)
