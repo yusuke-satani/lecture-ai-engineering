@@ -88,7 +88,7 @@ def train_model(sample_data, preprocessor):
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
         ]
     )
 
@@ -150,11 +150,25 @@ def test_model_reproducibility(sample_data, preprocessor):
     model1 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
         ]
     )
 
     model2 = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
+        ]
+    )
+
+    model3 = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+        ]
+    )
+
+    model4 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
             ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
@@ -164,11 +178,25 @@ def test_model_reproducibility(sample_data, preprocessor):
     # 学習
     model1.fit(X_train, y_train)
     model2.fit(X_train, y_train)
+    model3.fit(X_train, y_train)
+    model4.fit(X_train, y_train)
+
 
     # 同じ予測結果になることを確認
     predictions1 = model1.predict(X_test)
     predictions2 = model2.predict(X_test)
+    predictions3 = model2.predict(X_test)
+    predictions4 = model2.predict(X_test)
 
     assert np.array_equal(
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
+
+    assert np.array_equal(
+        predictions3, predictions4
+    ), "モデルの予測結果に再現性がありません"
+
+    #推論時間
+    test_model_inference_time(model1)
+    test_model_inference_time(model3)
+    
