@@ -86,7 +86,7 @@ def train_and_evaluate(X_train, X_test, y_train, y_test):
 def log_model(model, accuracy, params, X_train, X_test):
     try:
         # 実験名の設定
-        mlflow.set_experiment("titanic-survival-prediction")
+        mlflow.set_experiment("titanic-prediction")
 
         with mlflow.start_run():
             # メトリクスのロギング
@@ -125,7 +125,7 @@ def log_model(model, accuracy, params, X_train, X_test):
 # Kedro パイプラインの定義
 def create_pipeline():
     return Pipeline(
-        [
+        [  #ここでノードを作って管理や読みやすくなってる??
             node(
                 prepare_data,
                 inputs=None,

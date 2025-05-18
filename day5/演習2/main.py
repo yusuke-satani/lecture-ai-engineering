@@ -256,7 +256,7 @@ if __name__ == "__main__":
     # データバリデーション
     success, results = DataValidator.validate_titanic_data(X)
     print(f"データ検証結果: {'成功' if success else '失敗'}")
-    for result in results:
+    for result in results:  
         # "success": falseの場合はエラーメッセージを表示
         if not result["success"]:
             print(f"異常タイプ: {result['expectation_config']['type']}, 結果: {result}")
