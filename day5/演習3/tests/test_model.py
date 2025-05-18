@@ -196,7 +196,7 @@ def test_model_reproducibility(sample_data, preprocessor):
         predictions3, predictions4
     ), "モデルの予測結果に再現性がありません"
 
-    #推論時間
+    #推論時間の検証
     test_model_inference_time(model1)
     test_model_inference_time(model3)
     
