@@ -181,7 +181,6 @@ def test_model_reproducibility(sample_data, preprocessor):
     model3.fit(X_train, y_train)
     model4.fit(X_train, y_train)
 
-
     # 同じ予測結果になることを確認
     predictions1 = model1.predict(X_test)
     predictions2 = model2.predict(X_test)
@@ -196,7 +195,6 @@ def test_model_reproducibility(sample_data, preprocessor):
         predictions3, predictions4
     ), "モデルの予測結果に再現性がありません"
 
-    #推論時間の検証
+    # 推論時間の検証
     test_model_inference_time(model1)
     test_model_inference_time(model3)
-    
