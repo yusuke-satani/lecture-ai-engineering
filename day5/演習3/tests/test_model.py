@@ -137,6 +137,14 @@ def test_model_inference_time(train_model):
     assert inference_time < 1.0, f"推論時間が長すぎます: {inference_time}秒"
 
 
+def check_inference_time(model, X_test, threshold=1.0):
+    start_time = time.time()
+    model.predict(X_test)
+    end_time = time.time()
+    inference_time = end_time - start_time
+    assert inference_time < threshold, f"推論時間が長すぎます: {inference_time}秒"
+
+
 def test_model_reproducibility(sample_data, preprocessor):
     """モデルの再現性を検証"""
     # データの分割
