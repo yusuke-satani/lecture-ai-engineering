@@ -88,7 +88,7 @@ def train_model(sample_data, preprocessor):
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
         ]
     )
 
@@ -122,19 +122,17 @@ def test_model_accuracy(train_model):
     assert accuracy >= 0.75, f"モデルの精度が低すぎます: {accuracy}"
 
 
-def test_model_inference_time(train_model):
-    """モデルの推論時間を検証"""
-    model, X_test, _ = train_model
-
-    # 推論時間の計測
+def check_inference_time(model, X_test, threshold=1.0):
     start_time = time.time()
     model.predict(X_test)
     end_time = time.time()
-
     inference_time = end_time - start_time
+    assert inference_time < threshold, f"推論時間が長すぎます: {inference_time}秒"
 
-    # 推論時間が1秒未満であることを確認
-    assert inference_time < 1.0, f"推論時間が長すぎます: {inference_time}秒"
+
+def test_model_inference_time(train_model):
+    model, X_test, _ = train_model
+    check_inference_time(model, X_test)
 
 
 def test_model_reproducibility(sample_data, preprocessor):
@@ -150,11 +148,25 @@ def test_model_reproducibility(sample_data, preprocessor):
     model1 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
         ]
     )
 
     model2 = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", RandomForestClassifier(max_depth=10, random_state=42)),
+        ]
+    )
+
+    model3 = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
+        ]
+    )
+
+    model4 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
             ("classifier", DecisionTreeClassifier(max_depth=10, random_state=42)),
@@ -164,11 +176,23 @@ def test_model_reproducibility(sample_data, preprocessor):
     # 学習
     model1.fit(X_train, y_train)
     model2.fit(X_train, y_train)
+    model3.fit(X_train, y_train)
+    model4.fit(X_train, y_train)
 
     # 同じ予測結果になることを確認
     predictions1 = model1.predict(X_test)
     predictions2 = model2.predict(X_test)
+    predictions3 = model2.predict(X_test)
+    predictions4 = model2.predict(X_test)
 
     assert np.array_equal(
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
+
+    assert np.array_equal(
+        predictions3, predictions4
+    ), "モデルの予測結果に再現性がありません"
+
+    # 推論時間の検証
+    test_model_inference_time(model1)
+    test_model_inference_time(model3)
