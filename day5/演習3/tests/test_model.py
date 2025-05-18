@@ -5,6 +5,7 @@ import numpy as np
 import pickle
 import time
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.impute import SimpleImputer
@@ -87,7 +88,7 @@ def train_model(sample_data, preprocessor):
     model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
         ]
     )
 
@@ -149,14 +150,14 @@ def test_model_reproducibility(sample_data, preprocessor):
     model1 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
         ]
     )
 
     model2 = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
+            ("classifier", DecisionTreeClassifier(max_depth = 10,random_state=42)),
         ]
     )
 
